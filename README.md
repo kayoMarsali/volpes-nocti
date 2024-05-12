@@ -1,4 +1,4 @@
-# volpes-nocti
+# Volpes Nocti
 
 ## Current Status: Preproduction
 Volpes Nocti is a RWBY inspired Action Platformer.
