@@ -2,11 +2,16 @@
 #include <SDL_image.h>
 
 #include "defines.h"
+#include "config.h"
 #include "utils/math/kmath.h"
 #include "utils/logger/logger.h"
+#include "utils/strings/kstring.h"
+#include "utils/filesystem/filesystem.h"
 
 #include "types/entity.h"
 #include "types/render_window.h"
+
+#include "vendor/inih/cpp/INIReader.h"
 
 b8 isRunning = false;
 
@@ -14,16 +19,24 @@ int main(int argc, char *argv[]) {
     utils::Logger::Initialize();
 
     if(SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-        printf_s("SDL_Init failed: %s", SDL_GetError());
+        K_LOG_FATAL("SDL_Init failed: %s", SDL_GetError());
         return 1;
     }
 
     if(!IMG_Init(IMG_INIT_PNG)) {
-        printf_s("IMG_Init failed: %s", SDL_GetError());
+        K_LOG_FATAL("IMG_Init failed: %s", SDL_GetError());
         SDL_Quit();
         return 1;
     }
-    RenderWindow* game = new RenderWindow("Volpes Nocti v0.0.1", 1280, 720);
+    
+    //Video Settings
+    video_config vconfig = {};
+    SetupVideo(&vconfig);
+    //Audio Settings
+    audio_config aconfig = {};
+    SetupAudio(&aconfig);
+
+    RenderWindow* game = new RenderWindow("Volpes Nocti v0.0.1", vconfig);
     utils::math::seed_rng();
 
     isRunning = true;

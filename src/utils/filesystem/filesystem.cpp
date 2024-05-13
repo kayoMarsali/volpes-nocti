@@ -6,7 +6,6 @@
 #include "utils/logger/logger.h"
 
 
-#define MAX_LINE_BUFFER 16000
 
 namespace utils::filesystem {
 

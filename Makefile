@@ -4,9 +4,10 @@ INCS=-Isrc -I$(SDL2)\include -I$(SDL2_image)\include
 LDFLAGS=-L$(SDL2)\lib\x64 -L$(SDL2_image)\lib\x64 -lSDL2 -lSDL2main -l:SDL2.dll -lSDL2_image -l:SDL2_image.dll
 
 SRC=src
+VND=vendor
 OBJ=obj
 AST=assets
-SRCS=$(wildcard $(SRC)/*.cpp) $(wildcard $(SRC)/**/*.cpp) $(wildcard $(SRC)/**/**/*.cpp)
+SRCS=$(wildcard $(SRC)/*.cpp) $(wildcard $(SRC)/**/*.cpp) $(wildcard $(SRC)/**/**/*.cpp) $(wildcard $(SRC)/**/**/*.c) $(wildcard $(SRC)/**/**/**/*.cpp)
 ASSET=$(wildcard $(AST)/*.png)
 
 BIN=.\bin
@@ -43,6 +44,7 @@ copy:
 	mkdir -p $(BIN)\assets
 	cp -f $(SDL2)\lib\x64\SDL2.dll $(BIN)
 	cp -f $(SDL2_image)\lib\x64\SDL2_image.dll $(BIN)
+	cp -f config.ini $(BIN)
 
 deb_copy:
 	mkdir -p $(BIN)
@@ -50,6 +52,7 @@ deb_copy:
 	mkdir -p $(DEB_BIN)\assets
 	cp -f $(SDL2)\lib\x64\SDL2.dll $(DEB_BIN)
 	cp -f $(SDL2_image)\lib\x64\SDL2_image.dll $(DEB_BIN)
+	cp -f config.ini $(DEB_BIN)
 
 rel_copy:
 	mkdir -p $(BIN)
@@ -57,6 +60,7 @@ rel_copy:
 	mkdir -p $(REL_BIN)\assets
 	cp -f $(SDL2)\lib\x64\SDL2.dll $(REL_BIN)
 	cp -f $(SDL2_image)\lib\x64\SDL2_image.dll $(REL_BIN)
+	cp -f config.ini $(REL_BIN)
 
 $(ASSETS): $(ASSET) copy
 	cp -f $< $@

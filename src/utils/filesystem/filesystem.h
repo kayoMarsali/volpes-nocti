@@ -16,6 +16,7 @@ namespace utils {
     namespace filesystem {
 
         #define MAX_PATH_BUFFER 512
+        #define MAX_LINE_BUFFER 16000
 
         b8 Exists(const char* path);
 

@@ -4,20 +4,30 @@
 static u8 windowScaleH = 1;
 static u8 windowScaleV = 1;
 
-RenderWindow::RenderWindow(const char* title, i32 width, i32 height) : window(nullptr), renderer(nullptr) {
-    this->window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+RenderWindow::RenderWindow(const char* title, video_config vconfig) : window(nullptr), renderer(nullptr) {
+    //change this to allow borderless fullscreen later
+    if(vconfig.fullscreen) {
+        this->window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vconfig.window_width, vconfig.window_height, SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN);
+    }
+    else {
+        this->window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, vconfig.window_width, vconfig.window_height, SDL_WINDOW_SHOWN);
+    }
 
     if(this->window == nullptr) {
         K_LOG_FATAL("Failed to create SDL Window. Error: %s", SDL_GetError());
     }
-
-    this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if(vconfig.vsync) {
+        this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    }
+    else {
+        this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_ACCELERATED);
+    }
     if(this->renderer == nullptr) {
         K_LOG_FATAL("Failed to create SDL Renderer. Error: ", SDL_GetError());
     }
 
-    windowScaleH = width/640;
-    windowScaleV = height/480;
+    windowScaleH = vconfig.window_width/640;
+    windowScaleV = vconfig.window_height/480;
 }
 
 RenderWindow::~RenderWindow() {

@@ -5,6 +5,9 @@
 #include <stdarg.h>
 #include <memory.h>
 #include <windows.h>
+#include <chrono>
+#include <time.h>
+#include <string>
 
 namespace utils {
     namespace Logger {
@@ -19,6 +22,17 @@ namespace utils {
         void AppendToLogFile(const char* message);
         void ConsoleWrite(const char* message, u8 color);
         void ConsoleWriteError(const char* message, u8 color);
+        
+        //TODO: Move this somewhere else.
+        const std::string currentDateTime() {
+            time_t     now = time(0);
+            struct tm  tstruct;
+            char       buf[80];
+            tstruct = *localtime(&now);
+            strftime(buf, sizeof(buf), "%Y-%m-%d %X", &tstruct);
+
+            return buf;
+        }
 
         b8 Initialize() {
             LogBuffer = (char *)malloc(sizeof(char)*LOG_BUFFER_MAX);
@@ -59,6 +73,8 @@ namespace utils {
             const char* LevelStrings[6] = { "[FATAL]: ","[ERROR]: ", "[WARN]:  ", "[INFO]:  ", "[DEBUG]: ", "[TRACE]: " };
             b8 isError = level < 2;
 
+            const char* message_time = currentDateTime().c_str();
+
             char OutMessage[LOG_MESSAGE_BUFFER];
             memset(OutMessage, 0, sizeof(OutMessage));
 
@@ -68,7 +84,7 @@ namespace utils {
             utils::Strings::FormatV(OutMessage, message, args);
             va_end(args);
 
-            utils::Strings::Format(OutMessage, "%s%s\n", LevelStrings[level], OutMessage);
+            utils::Strings::Format(OutMessage, "%s %s%s\n",message_time, LevelStrings[level], OutMessage);
 
 
             if (isError) {
