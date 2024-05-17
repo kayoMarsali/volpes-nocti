@@ -4,6 +4,7 @@
 typedef struct video_config {
     i32 window_width = 640;
     i32 window_height = 480;
+    f32 sprite_scale = 1;
     b8 fullscreen = false;
     b8 vsync = false;
 } video_config;

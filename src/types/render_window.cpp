@@ -1,8 +1,8 @@
 #include "render_window.h"
 #include "utils/logger/logger.h"
+#include "config.h"
 
-static u8 windowScaleH = 1;
-static u8 windowScaleV = 1;
+video_config internalConfig;
 
 RenderWindow::RenderWindow(const char* title, video_config vconfig) : window(nullptr), renderer(nullptr) {
     //change this to allow borderless fullscreen later
@@ -26,8 +26,7 @@ RenderWindow::RenderWindow(const char* title, video_config vconfig) : window(nul
         K_LOG_FATAL("Failed to create SDL Renderer. Error: ", SDL_GetError());
     }
 
-    windowScaleH = vconfig.window_width/640;
-    windowScaleV = vconfig.window_height/480;
+    internalConfig = vconfig;
 }
 
 RenderWindow::~RenderWindow() {
@@ -62,11 +61,11 @@ void RenderWindow::RenderTexture(Entity &entity) {
     src.h = entity.CurrentFrame().h;
 
     SDL_Rect dst;
-    dst.x = entity.Position().x * windowScaleH;
-    dst.y = entity.Position().y * windowScaleV;
-    dst.w = 32 * windowScaleH;
-    dst.h = 32 * windowScaleV;
-    
+    dst.x = entity.Position().x * internalConfig.sprite_scale;
+    dst.y = entity.Position().y * internalConfig.sprite_scale;
+    dst.w = 32 * internalConfig.sprite_scale;
+    dst.h = 32 * internalConfig.sprite_scale;
+
     SDL_RenderCopy(this->renderer, entity.Texture(), &src, &dst);
 }
 
