@@ -53,16 +53,25 @@ void RenderWindow::ClearScreen() {
 	SDL_RenderClear(renderer);
 }
 
-void RenderWindow::RenderTexture(Entity &entity) {
+void RenderWindow::RenderTexture(Entity &entity, Camera camera) {
+    if(entity.Position().x - camera.posX < -32.0f || entity.Position().y - camera.posY < -32.0f) {
+        return;
+    }
+    if(((entity.Position().x - camera.posX) > (internalConfig.window_width - 640.0f)) || ((entity.Position().y - camera.posY) > (internalConfig.window_height - 320.0f))) {
+        return;
+    }
     SDL_Rect src;
     src.x = entity.CurrentFrame().x;
     src.y = entity.CurrentFrame().y;
     src.w = entity.CurrentFrame().w;
     src.h = entity.CurrentFrame().h;
 
+    i32 dest_x = (entity.Position().x-camera.posX);
+    i32 dest_y = (entity.Position().y-camera.posY);
+
     SDL_Rect dst;
-    dst.x = entity.Position().x * internalConfig.sprite_scale;
-    dst.y = entity.Position().y * internalConfig.sprite_scale;
+    dst.x = dest_x * internalConfig.sprite_scale;
+    dst.y = dest_y * internalConfig.sprite_scale;
     dst.w = 32 * internalConfig.sprite_scale;
     dst.h = 32 * internalConfig.sprite_scale;
 
@@ -70,6 +79,5 @@ void RenderWindow::RenderTexture(Entity &entity) {
 }
 
 void RenderWindow::DisplayScreen() {
-    
 	SDL_RenderPresent(renderer);
 }

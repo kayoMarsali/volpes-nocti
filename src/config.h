@@ -14,7 +14,6 @@ typedef struct audio_config {
     i8 sfx = 50;
     i8 environment = 50;
     i8 ui = 50;
-    //i8 voice = 50;
 } audio_config;
 
 void SetupVideo(video_config *config);
